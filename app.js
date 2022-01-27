@@ -19,6 +19,7 @@ var bodyParser = require('body-parser');
 
 const db = require('./databaseUtils/dbconnect')
 const { ppid } = require('process');
+const { SSL_OP_NO_COMPRESSION } = require('constants');
 var ngrok =  (process.env.NGROK_ENABLED==="true") ? require('ngrok'):null;
 
 
@@ -95,14 +96,10 @@ async function insertTokens(accessToken, refreshToken) {
  * Handle the callback to extract the `Auth Code` and exchange them for `Bearer-Tokens`
  */
 app.get('/callback', function(req, res) {
-
-    oauthClient.createToken(req.url)
-       .then(function(authResponse) {             
-
-            const result = JSON.parse(authResponse.text()) 
-            console.log('result ==================================> >>>>>>>>>>>', result)
-            insertTokens(result.access_token, result.refresh_token)
-
+    oauthClient.createToken(req.url) 
+       .then(function(authResponse) {              
+            const result = JSON.parse(authResponse.text())   
+            insertTokens(result.access_token, result.refresh_token)  
             oauth2_token_json = JSON.stringify(authResponse.getJson(), null,2);
          })
         .catch(function(e) {
@@ -118,7 +115,8 @@ app.get('/callback', function(req, res) {
  */
 app.get('/retrieveToken', function(req, res) {  
 
-
+    console.log('/retrieveToken')
+    console.log('oauth2_token_json', oauth2_token_json)
 
     res.send(oauth2_token_json);
 });
@@ -133,7 +131,12 @@ app.get('/refreshAccessToken', function(req,res){
         .then(function(authResponse){ 
 
             // console.log('The Refresh Token is  '+ JSON.stringify(authResponse.getJson()));
-            oauth2_token_json = JSON.stringify(authResponse.getJson(), null,2);
+            oauth2_token_json = JSON.stringify(authResponse.getJson(), null,2); 
+
+            console.log('/refreshAccessToken')
+            console.log('oauth2_token_json', JSON.parse(oauth2_token_json))
+
+
             res.send(oauth2_token_json);
         })
         .catch(function(e) {
