@@ -1,13 +1,22 @@
-// var db = require("./dbconnect")
+const db = require("./dbconnect")
+
+console.log('db' , db)
 
 // let q = db.query('select NOW()', (err, res) => {
 //     console.log(err, res)
-//     pool.end()
+//     db.end()
 // })
 
+function executeQuery(query) {
 
-// module.exports = {
-//     q
-// }
+    db.query(query, (e, r) => {
+        console.log(e, r)
+        
+    })
+}
+
+
+module.exports = executeQuery
+
 
 

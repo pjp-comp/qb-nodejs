@@ -1,0 +1,125 @@
+{
+    "token": {
+        "realmId": "4620816365170850890",
+        "token_type": "bearer",
+        "access_token": "eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..oFTbKYMmIN1F9gom-ZoPeQ.sRR2UuK_WyqNyArjWuIPk3j7NU4FafH4ItC7QYyb7jipTqyCWV5ogX5MA5DJIXmoucrRdAkWfcluemHe2lMYdKtLWloeagy60tpdFGU9K-zKS7uDiQ4AWjfkx1gJJSz3xV3u85FfBDttfcXpc2Id7dWhGD4WSsQNhUumtCPwEjQF9gT37yYYf_nvmQTerLNqpUM_RterWEu0RztWSTSYFw6XZt_PnJDRRPDwFCUkfYuAxTUwB6N7LCc6eKPFHwGHp8bvWmzVWlo8WcJakOb5apbEV-kAlnCLok9mpCnlOmgcOxgLQ1Unum4bvelm2PcuNZZwfrnflO2wXvRhZgVGE_tSFzVavj_kh43sFk2a1vDxge9V586sw0lGxedOvuqYGQuXBewivFBLVxnmbF2ww_rn9w4WX7BTni0dsV7tnSq8OvHiMRaI6gNHgFaRhI85rAuxdJ9NeEnZdMLw4Cu-RIIClTBnEERVoEco3xpMD7YQtg32pMuW5I6hWUQ2Bnzy8p9rqyxPyobZxVO19Tq-aO3XMwJwbveVGsPtec2OJZwJSBczgOQBmUdLZKbtlM-m8A8vd8Go6l2mJzxs4A2OeFw1gAzQxAeuuOv31XToIj9zxHFkfLdHcs5exl1XrulwdNOCev6SiCm26DgQNA__72VsxbSnRJVMDvBYy7uuk7BS8BsjSGw9hI3vH5sg0o-i.k9JLhabqZjkT2P1m37cN_g",
+        "refresh_token": "AB11652006286H5I7Avcq6JPcCruOGOt0tkabWsXIHwtTCahQu",
+        "expires_in": 3600,
+        "x_refresh_token_expires_in": 8726400,
+        "id_token": "",
+        "latency": 60000,
+        "createdAt": 1643279886699
+    },
+    "response": {
+        "url": "https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365170850890/companyinfo/4620816365170850890",
+        "headers": {
+            "date": "Thu, 27 Jan 2022 10:39:20 GMT",
+            "content-type": "application/json;charset=utf-8",
+            "transfer-encoding": "chunked",
+            "connection": "close",
+            "intuit_tid": "1-61f27658-45660a84265b19774fb935a0",
+            "x-spanid": "4d081d85-90e5-4a14-8fb2-d494e5b8f2da",
+            "x-amzn-trace-id": "Root=1-61f27658-45660a84265b19774fb935a0",
+            "x-content-type-options": "nosniff",
+            "qbo-version": "1973.097",
+            "service-time": "total=227, db=64",
+            "expires": "0",
+            "content-encoding": "gzip",
+            "cache-control": "max-age=0, no-cache, no-store, must-revalidate, private",
+            "x-envoy-upstream-service-time": "273",
+            "strict-transport-security": "max-age=31536000",
+            "server": "envoy"
+        },
+        "body": "{\"CompanyInfo\":{\"CompanyName\":\"Sandbox Company_IN_2\",\"LegalName\":\"Sandbox Company_IN_2\",\"CompanyAddr\":{\"Id\":\"1\",\"Line1\":\"2500 Garcia Ave\",\"City\":\"SomeCity\",\"Country\":\"IN\",\"CountrySubDivisionCode\":\"CA\",\"PostalCode\":\"12345\"},\"CustomerCommunicationAddr\":{\"Id\":\"1\",\"Line1\":\"2500 Garcia Ave\",\"City\":\"SomeCity\",\"Country\":\"IN\",\"CountrySubDivisionCode\":\"CA\",\"PostalCode\":\"12345\"},\"LegalAddr\":{\"Id\":\"1\",\"Line1\":\"2500 Garcia Ave\",\"City\":\"SomeCity\",\"Country\":\"IN\",\"CountrySubDivisionCode\":\"CA\",\"PostalCode\":\"12345\"},\"PrimaryPhone\":{},\"CompanyStartDate\":\"2021-05-24\",\"FiscalYearStartMonth\":\"January\",\"Country\":\"IN\",\"Email\":{\"Address\":\"qbindia@qbo.com\"},\"WebAddr\":{},\"SupportedLanguages\":\"en\",\"NameValue\":[{\"Name\":\"NeoEnabled\",\"Value\":\"true\"},{\"Name\":\"IsQbdtMigrated\",\"Value\":\"false\"},{\"Name\":\"SubscriptionStatus\",\"Value\":\"SUBSCRIBED\"},{\"Name\":\"OfferingSku\",\"Value\":\"QuickBooks Online Plus\"},{\"Name\":\"PayrollFeature\",\"Value\":\"false\"},{\"Name\":\"AccountantFeature\",\"Value\":\"false\"},{\"Name\":\"QBOIndustryType\",\"Value\":\"Event Planning\"},{\"Name\":\"ItemCategoriesFeature\",\"Value\":\"true\"},{\"Name\":\"AssignedTime\",\"Value\":\"2022-01-25T03:58:26-08:00\"}],\"domain\":\"QBO\",\"sparse\":false,\"Id\":\"1\",\"SyncToken\":\"4\",\"MetaData\":{\"CreateTime\":\"2021-05-24T03:52:14-07:00\",\"LastUpdatedTime\":\"2022-01-25T16:28:27-08:00\"}},\"time\":\"2022-01-27T02:39:20.313-08:00\"}",
+        "status": 200,
+        "statusText": "OK"
+    },
+    "body": "{\"CompanyInfo\":{\"CompanyName\":\"Sandbox Company_IN_2\",\"LegalName\":\"Sandbox Company_IN_2\",\"CompanyAddr\":{\"Id\":\"1\",\"Line1\":\"2500 Garcia Ave\",\"City\":\"SomeCity\",\"Country\":\"IN\",\"CountrySubDivisionCode\":\"CA\",\"PostalCode\":\"12345\"},\"CustomerCommunicationAddr\":{\"Id\":\"1\",\"Line1\":\"2500 Garcia Ave\",\"City\":\"SomeCity\",\"Country\":\"IN\",\"CountrySubDivisionCode\":\"CA\",\"PostalCode\":\"12345\"},\"LegalAddr\":{\"Id\":\"1\",\"Line1\":\"2500 Garcia Ave\",\"City\":\"SomeCity\",\"Country\":\"IN\",\"CountrySubDivisionCode\":\"CA\",\"PostalCode\":\"12345\"},\"PrimaryPhone\":{},\"CompanyStartDate\":\"2021-05-24\",\"FiscalYearStartMonth\":\"January\",\"Country\":\"IN\",\"Email\":{\"Address\":\"qbindia@qbo.com\"},\"WebAddr\":{},\"SupportedLanguages\":\"en\",\"NameValue\":[{\"Name\":\"NeoEnabled\",\"Value\":\"true\"},{\"Name\":\"IsQbdtMigrated\",\"Value\":\"false\"},{\"Name\":\"SubscriptionStatus\",\"Value\":\"SUBSCRIBED\"},{\"Name\":\"OfferingSku\",\"Value\":\"QuickBooks Online Plus\"},{\"Name\":\"PayrollFeature\",\"Value\":\"false\"},{\"Name\":\"AccountantFeature\",\"Value\":\"false\"},{\"Name\":\"QBOIndustryType\",\"Value\":\"Event Planning\"},{\"Name\":\"ItemCategoriesFeature\",\"Value\":\"true\"},{\"Name\":\"AssignedTime\",\"Value\":\"2022-01-25T03:58:26-08:00\"}],\"domain\":\"QBO\",\"sparse\":false,\"Id\":\"1\",\"SyncToken\":\"4\",\"MetaData\":{\"CreateTime\":\"2021-05-24T03:52:14-07:00\",\"LastUpdatedTime\":\"2022-01-25T16:28:27-08:00\"}},\"time\":\"2022-01-27T02:39:20.313-08:00\"}",
+    "json": {
+        "CompanyInfo": {
+            "CompanyName": "Sandbox Company_IN_2",
+            "LegalName": "Sandbox Company_IN_2",
+            "CompanyAddr": {
+                "Id": "1",
+                "Line1": "2500 Garcia Ave",
+                "City": "SomeCity",
+                "Country": "IN",
+                "CountrySubDivisionCode": "CA",
+                "PostalCode": "12345"
+            },
+            "CustomerCommunicationAddr": {
+                "Id": "1",
+                "Line1": "2500 Garcia Ave",
+                "City": "SomeCity",
+                "Country": "IN",
+                "CountrySubDivisionCode": "CA",
+                "PostalCode": "12345"
+            },
+            "LegalAddr": {
+                "Id": "1",
+                "Line1": "2500 Garcia Ave",
+                "City": "SomeCity",
+                "Country": "IN",
+                "CountrySubDivisionCode": "CA",
+                "PostalCode": "12345"
+            },
+            "PrimaryPhone": {},
+            "CompanyStartDate": "2021-05-24",
+            "FiscalYearStartMonth": "January",
+            "Country": "IN",
+            "Email": {
+                "Address": "qbindia@qbo.com"
+            },
+            "WebAddr": {},
+            "SupportedLanguages": "en",
+            "NameValue": [
+                {
+                    "Name": "NeoEnabled",
+                    "Value": "true"
+                },
+                {
+                    "Name": "IsQbdtMigrated",
+                    "Value": "false"
+                },
+                {
+                    "Name": "SubscriptionStatus",
+                    "Value": "SUBSCRIBED"
+                },
+                {
+                    "Name": "OfferingSku",
+                    "Value": "QuickBooks Online Plus"
+                },
+                {
+                    "Name": "PayrollFeature",
+                    "Value": "false"
+                },
+                {
+                    "Name": "AccountantFeature",
+                    "Value": "false"
+                },
+                {
+                    "Name": "QBOIndustryType",
+                    "Value": "Event Planning"
+                },
+                {
+                    "Name": "ItemCategoriesFeature",
+                    "Value": "true"
+                },
+                {
+                    "Name": "AssignedTime",
+                    "Value": "2022-01-25T03:58:26-08:00"
+                }
+            ],
+            "domain": "QBO",
+            "sparse": false,
+            "Id": "1",
+            "SyncToken": "4",
+            "MetaData": {
+                "CreateTime": "2021-05-24T03:52:14-07:00",
+                "LastUpdatedTime": "2022-01-25T16:28:27-08:00"
+            }
+        },
+        "time": "2022-01-27T02:39:20.313-08:00"
+    },
+    "intuit_tid": "1-61f27658-45660a84265b19774fb935a0"
+}

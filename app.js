@@ -90,7 +90,10 @@ app.get('/callback', function(req, res) {
 /**
  * Display the token : CAUTION : JUST for sample purposes
  */
-app.get('/retrieveToken', function(req, res) {
+app.get('/retrieveToken', function(req, res) { 
+
+    console.log(res)
+
     res.send(oauth2_token_json);
 });
 
@@ -124,7 +127,7 @@ app.get('/getCompanyInfo', function(req,res){
     var url = oauthClient.environment == 'sandbox' ? OAuthClient.environment.sandbox : OAuthClient.environment.production ;
 
     oauthClient.makeApiCall({url: url + 'v3/company/' + companyID +'/companyinfo/' + companyID})
-        .then(function(authResponse){
+        .then(function(authResponse){ 
             console.log("The response for API call is :"+JSON.stringify(authResponse));
             res.send(JSON.parse(authResponse.text()));
         })
@@ -132,22 +135,18 @@ app.get('/getCompanyInfo', function(req,res){
             console.error(e);
         });
 });
- 
-
-app.get('/test', function(req, res) { 
-
-    const pool = new Pool({
-        user: 'postgres', 
-        host: 'localhost', 
-        database: 'quickbook',
-        password: 'postgres'
-    })
 
 
-    pool.query('SELECT NOW()', (e, r) => {
-        console.log(e,r) 
-        pool.end(); 
-    })
+
+
+app.get('/test', function(req, res) {  
+    const db = require('./databaseUtils/dbconnect')
+    db
+    .query('select now() as now')
+    .then(res => console.log(res.rows[0]))
+    .catch(e => console.log(e.stack)) 
+    
+    res.send(db)
 })
 
 /**
