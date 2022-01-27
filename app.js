@@ -13,7 +13,11 @@ var app = express();
 var path = require('path');
 var OAuthClient = require('intuit-oauth');
 var bodyParser = require('body-parser');
-const { Pool, Client } = require('pg');
+
+// const { Pool, Client } = require('pg');
+
+
+const db = require('./databaseUtils/dbconnect')
 const { ppid } = require('process');
 var ngrok =  (process.env.NGROK_ENABLED==="true") ? require('ngrok'):null;
 
@@ -70,14 +74,36 @@ app.get('/authUri', urlencodedParser, function(req,res) {
 });
 
 
+
+async function insertTokens(accessToken, refreshToken) {
+
+    const text = 'INSERT INTO tokens(access_tk, refresh_tk) VALUES($1, $2) RETURNING *; '
+    const values = [accessToken, refreshToken] 
+
+
+    try{
+        const r = await db.query(text, values) 
+        console.log(r.rows[0]) 
+    } catch(e) {
+        console.log(e)
+    }
+
+}
+
+
 /**
  * Handle the callback to extract the `Auth Code` and exchange them for `Bearer-Tokens`
  */
 app.get('/callback', function(req, res) {
 
     oauthClient.createToken(req.url)
-       .then(function(authResponse) {
-             oauth2_token_json = JSON.stringify(authResponse.getJson(), null,2);
+       .then(function(authResponse) {             
+
+            const result = JSON.parse(authResponse.text()) 
+            console.log('result ==================================> >>>>>>>>>>>', result)
+            insertTokens(result.access_token, result.refresh_token)
+
+            oauth2_token_json = JSON.stringify(authResponse.getJson(), null,2);
          })
         .catch(function(e) {
              console.error(e);
@@ -90,9 +116,9 @@ app.get('/callback', function(req, res) {
 /**
  * Display the token : CAUTION : JUST for sample purposes
  */
-app.get('/retrieveToken', function(req, res) { 
+app.get('/retrieveToken', function(req, res) {  
 
-    console.log(res)
+
 
     res.send(oauth2_token_json);
 });
@@ -104,7 +130,8 @@ app.get('/retrieveToken', function(req, res) {
 app.get('/refreshAccessToken', function(req,res){
 
     oauthClient.refresh()
-        .then(function(authResponse){
+        .then(function(authResponse){ 
+
             // console.log('The Refresh Token is  '+ JSON.stringify(authResponse.getJson()));
             oauth2_token_json = JSON.stringify(authResponse.getJson(), null,2);
             res.send(oauth2_token_json);
@@ -115,12 +142,14 @@ app.get('/refreshAccessToken', function(req,res){
 
 
 });
+ 
+
+
 
 /**
  * getCompanyInfo ()
  */
 app.get('/getCompanyInfo', function(req,res){
-
 
     var companyID = oauthClient.getToken().realmId;
 
@@ -128,7 +157,7 @@ app.get('/getCompanyInfo', function(req,res){
 
     oauthClient.makeApiCall({url: url + 'v3/company/' + companyID +'/companyinfo/' + companyID})
         .then(function(authResponse){ 
-            console.log("The response for API call is :"+JSON.stringify(authResponse));
+            // console.log("The response for API call is :"+JSON.stringify(authResponse)); 
             res.send(JSON.parse(authResponse.text()));
         })
         .catch(function(e) {
@@ -140,7 +169,7 @@ app.get('/getCompanyInfo', function(req,res){
 
 
 app.get('/test', function(req, res) {  
-    const db = require('./databaseUtils/dbconnect')
+    
     db
     .query('select now() as now')
     .then(res => console.log(res.rows[0]))
