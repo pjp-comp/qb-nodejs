@@ -1,6 +1,8 @@
 'use strict';
 
-require('dotenv').config();
+
+require('dotenv').config(); 
+
 
 /**
  * Require the dependencies
@@ -11,6 +13,8 @@ var app = express();
 var path = require('path');
 var OAuthClient = require('intuit-oauth');
 var bodyParser = require('body-parser');
+const { Pool, Client } = require('pg');
+const { ppid } = require('process');
 var ngrok =  (process.env.NGROK_ENABLED==="true") ? require('ngrok'):null;
 
 
@@ -98,7 +102,7 @@ app.get('/refreshAccessToken', function(req,res){
 
     oauthClient.refresh()
         .then(function(authResponse){
-            console.log('The Refresh Token is  '+ JSON.stringify(authResponse.getJson()));
+            // console.log('The Refresh Token is  '+ JSON.stringify(authResponse.getJson()));
             oauth2_token_json = JSON.stringify(authResponse.getJson(), null,2);
             res.send(oauth2_token_json);
         })
@@ -128,7 +132,23 @@ app.get('/getCompanyInfo', function(req,res){
             console.error(e);
         });
 });
+ 
 
+app.get('/test', function(req, res) { 
+
+    const pool = new Pool({
+        user: 'postgres', 
+        host: 'localhost', 
+        database: 'quickbook',
+        password: 'postgres'
+    })
+
+
+    pool.query('SELECT NOW()', (e, r) => {
+        console.log(e,r) 
+        pool.end(); 
+    })
+})
 
 /**
  * Start server on HTTP (will use ngrok for HTTPS forwarding)
