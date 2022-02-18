@@ -1,0 +1,15 @@
+
+
+
+alter table tokens 
+add column realmid character varying(255),
+add column token_type character varying(255),
+add column expires_in character varying(255), 
+add column refresh_token_expires_in character varying(255); 
+
+
+
+
+alter table tokens 
+alter column expires_in type double precision using expires_in :: double precision,
+alter column refresh_token_expires_in type double precision using refresh_token_expires_in :: double precision; 

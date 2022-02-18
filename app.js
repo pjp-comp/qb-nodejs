@@ -71,15 +71,16 @@ app.get('/authUri', urlencodedParser, function(req,res) {
     });
 
     var authUri = oauthClient.authorizeUri({scope:[OAuthClient.scopes.Accounting],state:'intuit-test'});
+
     res.send(authUri);
 });
 
 
 
-async function insertTokens(accessToken, refreshToken) {
+async function insertTokens(accessToken, refreshToken,realmId, token_type, expires_in, refresh_token_expin) {
 
-    const text = 'INSERT INTO tokens(access_tk, refresh_tk) VALUES($1, $2) RETURNING *; '
-    const values = [accessToken, refreshToken] 
+    const text = 'INSERT INTO tokens(access_tk, refresh_tk, realmid, token_type, expires_in, refresh_token_expires_in) VALUES($1, $2, $3, $4, $5, $6) RETURNING *; '
+    const values = [accessToken, refreshToken, realmId, token_type, expires_in, refresh_token_expin] 
 
 
     try{
@@ -95,11 +96,36 @@ async function insertTokens(accessToken, refreshToken) {
 /**
  * Handle the callback to extract the `Auth Code` and exchange them for `Bearer-Tokens`
  */
-app.get('/callback', function(req, res) {
+app.get('/callback', function(req, res) { 
+
     oauthClient.createToken(req.url) 
        .then(function(authResponse) {              
-            const result = JSON.parse(authResponse.text())   
-            insertTokens(result.access_token, result.refresh_token)  
+            const result = JSON.parse(authResponse.text())
+            
+        
+            console.log('oauthClient ===========', JSON.stringify(oauthClient)) 
+
+            let d = JSON.parse(JSON.stringify(oauthClient))
+    
+            let row = {
+                realmId: d.token.realmId,
+                token_type: d.token.token_type,
+                access_token: d.token.access_token,
+                refresh_token: d.token.refresh_token,
+                expires_in: d.token.expires_in,
+                x_refresh_token_expires_in: d.token.x_refresh_token_expires_in
+            }
+            
+            insertTokens(
+                row.access_token, 
+                row.refresh_token,
+                row.realmId, 
+                row.token_type, 
+                row.expires_in, 
+                row.x_refresh_token_expires_in
+                )   
+
+
             oauth2_token_json = JSON.stringify(authResponse.getJson(), null,2);
          })
         .catch(function(e) {
@@ -114,10 +140,6 @@ app.get('/callback', function(req, res) {
  * Display the token : CAUTION : JUST for sample purposes
  */
 app.get('/retrieveToken', function(req, res) {  
-
-    console.log('/retrieveToken')
-    console.log('oauth2_token_json', oauth2_token_json)
-
     res.send(oauth2_token_json);
 });
 
