@@ -1,6 +1,8 @@
 'use strict';
 
-require('dotenv').config();
+
+require('dotenv').config(); 
+
 
 /**
  * Require the dependencies
@@ -11,6 +13,13 @@ var app = express();
 var path = require('path');
 var OAuthClient = require('intuit-oauth');
 var bodyParser = require('body-parser');
+
+// const { Pool, Client } = require('pg');
+
+
+const db = require('./databaseUtils/dbconnect')
+const { ppid } = require('process');
+const { SSL_OP_NO_COMPRESSION } = require('constants');
 var ngrok =  (process.env.NGROK_ENABLED==="true") ? require('ngrok'):null;
 
 
@@ -62,18 +71,62 @@ app.get('/authUri', urlencodedParser, function(req,res) {
     });
 
     var authUri = oauthClient.authorizeUri({scope:[OAuthClient.scopes.Accounting],state:'intuit-test'});
+
     res.send(authUri);
 });
+
+
+
+async function insertTokens(accessToken, refreshToken,realmId, token_type, expires_in, refresh_token_expin) {
+
+    const text = 'INSERT INTO tokens(access_tk, refresh_tk, realmid, token_type, expires_in, refresh_token_expires_in) VALUES($1, $2, $3, $4, $5, $6) RETURNING *; '
+    const values = [accessToken, refreshToken, realmId, token_type, expires_in, refresh_token_expin] 
+
+
+    try{
+        const r = await db.query(text, values) 
+        console.log(r.rows[0]) 
+    } catch(e) {
+        console.log(e)
+    }
+
+}
 
 
 /**
  * Handle the callback to extract the `Auth Code` and exchange them for `Bearer-Tokens`
  */
-app.get('/callback', function(req, res) {
+app.get('/callback', function(req, res) { 
 
-    oauthClient.createToken(req.url)
-       .then(function(authResponse) {
-             oauth2_token_json = JSON.stringify(authResponse.getJson(), null,2);
+    oauthClient.createToken(req.url) 
+       .then(function(authResponse) {              
+            const result = JSON.parse(authResponse.text())
+            
+        
+            console.log('oauthClient ===========', JSON.stringify(oauthClient)) 
+
+            let d = JSON.parse(JSON.stringify(oauthClient))
+    
+            let row = {
+                realmId: d.token.realmId,
+                token_type: d.token.token_type,
+                access_token: d.token.access_token,
+                refresh_token: d.token.refresh_token,
+                expires_in: d.token.expires_in,
+                x_refresh_token_expires_in: d.token.x_refresh_token_expires_in
+            }
+            
+            insertTokens(
+                row.access_token, 
+                row.refresh_token,
+                row.realmId, 
+                row.token_type, 
+                row.expires_in, 
+                row.x_refresh_token_expires_in
+                )   
+
+
+            oauth2_token_json = JSON.stringify(authResponse.getJson(), null,2);
          })
         .catch(function(e) {
              console.error(e);
@@ -86,7 +139,7 @@ app.get('/callback', function(req, res) {
 /**
  * Display the token : CAUTION : JUST for sample purposes
  */
-app.get('/retrieveToken', function(req, res) {
+app.get('/retrieveToken', function(req, res) {  
     res.send(oauth2_token_json);
 });
 
@@ -97,9 +150,15 @@ app.get('/retrieveToken', function(req, res) {
 app.get('/refreshAccessToken', function(req,res){
 
     oauthClient.refresh()
-        .then(function(authResponse){
-            console.log('The Refresh Token is  '+ JSON.stringify(authResponse.getJson()));
-            oauth2_token_json = JSON.stringify(authResponse.getJson(), null,2);
+        .then(function(authResponse){ 
+
+            // console.log('The Refresh Token is  '+ JSON.stringify(authResponse.getJson()));
+            oauth2_token_json = JSON.stringify(authResponse.getJson(), null,2); 
+
+            console.log('/refreshAccessToken')
+            console.log('oauth2_token_json', JSON.parse(oauth2_token_json))
+
+
             res.send(oauth2_token_json);
         })
         .catch(function(e) {
@@ -108,20 +167,22 @@ app.get('/refreshAccessToken', function(req,res){
 
 
 });
+ 
+
+
 
 /**
  * getCompanyInfo ()
  */
 app.get('/getCompanyInfo', function(req,res){
 
-
     var companyID = oauthClient.getToken().realmId;
 
     var url = oauthClient.environment == 'sandbox' ? OAuthClient.environment.sandbox : OAuthClient.environment.production ;
 
     oauthClient.makeApiCall({url: url + 'v3/company/' + companyID +'/companyinfo/' + companyID})
-        .then(function(authResponse){
-            console.log("The response for API call is :"+JSON.stringify(authResponse));
+        .then(function(authResponse){ 
+            // console.log("The response for API call is :"+JSON.stringify(authResponse)); 
             res.send(JSON.parse(authResponse.text()));
         })
         .catch(function(e) {
@@ -129,6 +190,18 @@ app.get('/getCompanyInfo', function(req,res){
         });
 });
 
+
+
+
+app.get('/test', function(req, res) {  
+    
+    db
+    .query('select now() as now')
+    .then(res => console.log(res.rows[0]))
+    .catch(e => console.log(e.stack)) 
+    
+    res.send(db)
+})
 
 /**
  * Start server on HTTP (will use ngrok for HTTPS forwarding)
