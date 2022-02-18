@@ -20,6 +20,7 @@ var bodyParser = require('body-parser');
 const db = require('./databaseUtils/dbconnect')
 const { ppid } = require('process');
 const { SSL_OP_NO_COMPRESSION } = require('constants');
+const { Console } = require('console');
 var ngrok =  (process.env.NGROK_ENABLED==="true") ? require('ngrok'):null;
 
 
@@ -77,19 +78,45 @@ app.get('/authUri', urlencodedParser, function(req,res) {
 
 
 
+async function isExist(realmId) { 
+    let id; 
+    console.log('is exist called. relmid = ', realmId)
+    const query = `select id from tokens where realmid ='${realmId}'`
+
+    // db
+    // .query(query)
+    // .then( res => {
+    //         id = JSON.parse( JSON.stringify(res) )   
+
+    //         console.log(res.rows.shift())
+    //         id = res.rows.shift()
+    //     }
+    // )
+    // .catch( e => console.log(e.stack))
+
+    return await db.query(query)
+    
+}
+
 async function insertTokens(accessToken, refreshToken,realmId, token_type, expires_in, refresh_token_expin) {
 
     const text = 'INSERT INTO tokens(access_tk, refresh_tk, realmid, token_type, expires_in, refresh_token_expires_in) VALUES($1, $2, $3, $4, $5, $6) RETURNING *; '
     const values = [accessToken, refreshToken, realmId, token_type, expires_in, refresh_token_expin] 
 
+    let data = await isExist(realmId)
+    let row = data.rows.shift()
+    console.log('this is my data. ', row)
 
-    try{
-        const r = await db.query(text, values) 
-        console.log(r.rows[0]) 
-    } catch(e) {
-        console.log(e)
+    let k = row ? row.id : 0
+    if(parseInt(k) > 0) {
+        return 
+    } else {
+        try{
+            const r = await db.query(text, values) 
+        } catch(e) {
+            console.log(e)
+        }
     }
-
 }
 
 
@@ -101,9 +128,6 @@ app.get('/callback', function(req, res) {
     oauthClient.createToken(req.url) 
        .then(function(authResponse) {              
             const result = JSON.parse(authResponse.text())
-            
-        
-            console.log('oauthClient ===========', JSON.stringify(oauthClient)) 
 
             let d = JSON.parse(JSON.stringify(oauthClient))
     
@@ -116,6 +140,8 @@ app.get('/callback', function(req, res) {
                 x_refresh_token_expires_in: d.token.x_refresh_token_expires_in
             }
             
+
+
             insertTokens(
                 row.access_token, 
                 row.refresh_token,
