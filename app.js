@@ -73,6 +73,7 @@ app.get('/authUri', urlencodedParser, function(req,res) {
 
     var authUri = oauthClient.authorizeUri({scope:[OAuthClient.scopes.Accounting],state:'intuit-test'});
 
+    console.log('authURI ====================> ', authUri)
     res.send(authUri);
 });
 
@@ -216,6 +217,22 @@ app.get('/getCompanyInfo', function(req,res){
         });
 });
 
+
+/**
+ * refere this url : https://www.npmjs.com/package/node-quickbooks#createaccountobject-callback
+ * 
+ */
+app.get('/testing', function (req, resp) {
+
+
+    let acc = {
+        "Name": "MyJobs_test", 
+        "AccountType": "Accounts Receivable"
+      }
+    
+
+
+})
 
 
 
