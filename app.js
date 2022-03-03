@@ -22,6 +22,8 @@ const { ppid } = require('process');
 const { SSL_OP_NO_COMPRESSION } = require('constants');
 const { Console } = require('console');
 var ngrok =  (process.env.NGROK_ENABLED==="true") ? require('ngrok'):null;
+var QuickBooks = require('node-quickbooks');
+const { resolveNaptr } = require('dns');
 
 
 /**
@@ -50,6 +52,8 @@ var oauth2_token_json = null,
 
 var oauthClient = null;
 
+var qbo = ''
+
 
 /**
  * Home Route
@@ -58,6 +62,10 @@ app.get('/', function(req, res) {
 
     res.render('index');
 });
+
+
+  
+
 
 /**
  * Get the AuthorizeUri
@@ -71,9 +79,8 @@ app.get('/authUri', urlencodedParser, function(req,res) {
         redirectUri: req.query.json.redirectUri
     });
 
-    var authUri = oauthClient.authorizeUri({scope:[OAuthClient.scopes.Accounting],state:'intuit-test'});
+    var authUri = oauthClient.authorizeUri({scope:[OAuthClient.scopes.Accounting],state:'intuit-test'}); 
 
-    console.log('authURI ====================> ', authUri)
     res.send(authUri);
 });
 
@@ -224,14 +231,39 @@ app.get('/getCompanyInfo', function(req,res){
  */
 app.get('/testing', function (req, resp) {
 
+    
 
-    console.log(`oauthClient =============> ${oauthClient}`)
+    qbo = new QuickBooks(
+        oauthClient.clientId, 
+        oauthClient.clientSecret,
+        oauthClient.token.access_token, 
+        false, 
+        oauthClient.token.realmId, 
+        true, 
+        true, 
+        null, 
+        '2.0', 
+        oauthClient.token.refresh_token
+    )
+
+
+    console.log('=oauthClient----------------------------------> ', oauthClient)
+    console.log('=qbo----------------------------------> ', qbo)
+    
+
+
     let acc = {
-        "Name": "MyJobs_test", 
+        "Name": "MyJobs_test_hello_world.", 
         "AccountType": "Accounts Receivable"
       }
     
+    
+    qbo.createAccount(acc, function(req, resp) {
+        console.log("reqeust is ======> ", req)
+        console.log("reqeust is ======> ", resp)
+    })
 
+    resp.send('Hello. ')
 
 })
 
