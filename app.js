@@ -225,6 +225,7 @@ app.get('/getCompanyInfo', function(req,res){
 app.get('/testing', function (req, resp) {
 
 
+    console.log(`oauthClient =============> ${oauthClient}`)
     let acc = {
         "Name": "MyJobs_test", 
         "AccountType": "Accounts Receivable"
